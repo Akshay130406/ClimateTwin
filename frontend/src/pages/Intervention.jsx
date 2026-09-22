@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import InterventionMap from "../components/InterventionMap";
 
-const API = "http://127.0.0.1:8000";
+const API = "https://climatetwin.onrender.com";
 
 const DEFAULT_INTERVENTIONS = {
   tree_plantation: 50,

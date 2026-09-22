@@ -26,14 +26,14 @@ export default function ClimateMap() {
 
   useEffect(() => {
     Promise.all([
-      fetch("http://127.0.0.1:8000/map/cells").then((response) => {
+      fetch("https://climatetwin.onrender.com/map/cells").then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load map data");
         }
         return response.json();
       }),
 
-      fetch("http://127.0.0.1:8000/heat-risk").then((response) => {
+      fetch("https://climatetwin.onrender.com/heat-risk").then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load heat risk data");
         }

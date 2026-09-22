@@ -94,7 +94,7 @@ function OptimizationMapLoader({ priorityCells }) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/map/cells")
+    fetch("https://climatetwin.onrender.com/map/cells")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load map data");

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://climatetwin.onrender.com";
 
 /* =========================================================
    FUTURE IMPACT — CLIMATETWIN PREMIUM COMMAND CENTER
