@@ -1,111 +1,862 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  /* =========================
+     CLIMATE TWIN COLOR SYSTEM
+     ========================= */
+
+  --primary: #123c35;
+  --primary-light: #216653;
+  --primary-soft: #dff3ea;
+
+  --accent: #36a269;
+  --accent-light: #72d6a2;
+  --accent-dark: #23784e;
+
+  --teal: #159c9a;
+  --blue: #3487d8;
+  --sky: #65c8e8;
+
+  --heat: #f28c4b;
+  --heat-light: #ffd0a8;
+  --danger: #dc5c55;
+  --warning: #e5a63b;
+
+  --bg: #eef6f3;
+  --bg-dark: #dfeee9;
+
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-solid: #ffffff;
+  --surface-soft: #e7f2ee;
+
+  --text: #20352f;
+  --text-muted: #667b74;
+
+  --border: rgba(28, 72, 61, 0.12);
+  --border-strong: rgba(28, 72, 61, 0.2);
+
+  --shadow-sm:
+    0 4px 14px rgba(19, 60, 53, 0.06);
+
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    0 12px 35px rgba(19, 60, 53, 0.09);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --shadow-lg:
+    0 22px 60px rgba(19, 60, 53, 0.14);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   color: var(--text);
   background: var(--bg);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* =========================
+   GLOBAL RESET
+   ========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+
+  min-width: 320px;
+  min-height: 100vh;
+
+  color: var(--text);
+
+  /*
+    Layered climate-inspired background
+  */
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(79, 157, 120, 0.14),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(101, 200, 232, 0.13),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(54, 162, 105, 0.08),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #f4faf7 0%,
+      #eef7f3 45%,
+      #eaf5f2 100%
+    );
+
+  background-attachment: fixed;
 }
+
+
+/* =========================
+   ROOT
+   ========================= */
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
 }
 
+
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--primary);
+  margin-top: 0;
+  letter-spacing: -0.02em;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  letter-spacing: -0.035em;
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
+
 p {
-  margin: 0;
+  line-height: 1.65;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================
+   FORM ELEMENTS
+   ========================= */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    filter 0.25s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   INPUTS
+   ========================= */
+
+input,
+select,
+textarea {
+  color: var(--text);
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border: 1px solid var(--border-strong);
+
+  border-radius: var(--radius-sm);
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 4px rgba(54, 162, 105, 0.12);
+
+  background: #ffffff;
+}
+
+
+/* =========================
+   TABLES
+   ========================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+/* =========================
+   GLASS SURFACE
+   ========================= */
+
+.climate-glass {
+  background: rgba(255, 255, 255, 0.72);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(255, 255, 255, 0.65);
+
+  box-shadow: var(--shadow);
+}
+
+
+/* =========================
+   CLIMATE CARD
+   ========================= */
+
+.climate-card {
+  position: relative;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius);
+
+  box-shadow: var(--shadow-sm);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.climate-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent),
+      var(--teal),
+      var(--blue)
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+}
+
+.climate-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(54, 162, 105, 0.22);
+
+  box-shadow: var(--shadow-lg);
+}
+
+.climate-card:hover::before {
+  opacity: 1;
+}
+
+
+/* =========================
+   GRADIENT HERO
+   ========================= */
+
+.climate-hero {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(101, 200, 232, 0.25),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(114, 214, 162, 0.2),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #123c35,
+      #185646 45%,
+      #217461
+    );
+
+  color: white;
+
+  border-radius: var(--radius-lg);
+
+  box-shadow:
+    0 25px 70px rgba(18, 60, 53, 0.2);
+}
+
+.climate-hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -100px;
+  top: -120px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.15),
+      transparent 65%
+    );
+
+  animation: gentleFloat 7s ease-in-out infinite;
+}
+
+
+/* =========================
+   GLOWING CLIMATE ORB
+   ========================= */
+
+.climate-orb {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(255, 255, 255, 0.4),
+      rgba(54, 162, 105, 0.18),
+      transparent 70%
+    );
+
+  filter: blur(2px);
+
+  animation:
+    orbFloat 8s ease-in-out infinite,
+    orbGlow 4s ease-in-out infinite alternate;
+}
+
+
+/* =========================
+   KPI CARDS
+   ========================= */
+
+.kpi-card {
+  position: relative;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius);
+
+  box-shadow: var(--shadow-sm);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.kpi-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 90px;
+  height: 90px;
+
+  right: -35px;
+  bottom: -35px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(54, 162, 105, 0.16),
+      transparent 70%
+    );
+
+  transition: transform 0.4s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: var(--shadow);
+}
+
+.kpi-card:hover::after {
+  transform: scale(1.5);
+}
+
+
+/* =========================
+   RISK COLORS
+   ========================= */
+
+.risk-low {
+  background: linear-gradient(
+    135deg,
+    #e5f7ed,
+    #d8f0e5
+  );
+
+  color: #26734b;
+}
+
+.risk-moderate {
+  background: linear-gradient(
+    135deg,
+    #fff6df,
+    #ffedc2
+  );
+
+  color: #9a6b16;
+}
+
+.risk-high {
+  background: linear-gradient(
+    135deg,
+    #fff0df,
+    #ffd9bc
+  );
+
+  color: #a95422;
+}
+
+.risk-very-high {
+  background: linear-gradient(
+    135deg,
+    #ffe7e5,
+    #ffd0cd
+  );
+
+  color: #a83f39;
+}
+
+
+/* =========================
+   LIVE INDICATOR
+   ========================= */
+
+.live-indicator {
   display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+
+  align-items: center;
+  gap: 7px;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.live-indicator::before {
+  content: "";
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #39b873;
+
+  box-shadow:
+    0 0 0 0 rgba(57, 184, 115, 0.5);
+
+  animation: livePulse 2s infinite;
+}
+
+
+/* =========================
+   BUTTON EFFECT
+   ========================= */
+
+.climate-button {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary-light),
+      var(--accent-dark)
+    );
+
+  color: white;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 22px rgba(35, 120, 78, 0.2);
+}
+
+.climate-button::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 80%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+}
+
+.climate-button:hover::before {
+  left: 140%;
+}
+
+.climate-button:hover {
+  box-shadow:
+    0 12px 30px rgba(35, 120, 78, 0.3);
+}
+
+
+/* =========================
+   MAP CONTAINER
+   ========================= */
+
+.map-container {
+  border-radius: var(--radius);
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.map-container:hover {
+  transform: translateY(-3px);
+
+  box-shadow: var(--shadow-lg);
+}
+
+
+/* =========================
+   SECTION REVEAL
+   ========================= */
+
+.section-reveal {
+  animation:
+    sectionReveal 0.7s ease both;
+}
+
+
+/* =========================
+   PAGE ENTER
+   ========================= */
+
+.page-enter {
+  animation:
+    pageEnter 0.55s ease both;
+}
+
+
+/* =========================
+   FLOATING EFFECT
+   ========================= */
+
+.float {
+  animation:
+    gentleFloat 6s ease-in-out infinite;
+}
+
+
+/* =========================
+   SHIMMER
+   ========================= */
+
+.shimmer {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 60%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.45),
+      transparent
+    );
+
+  animation:
+    shimmerMove 2.5s infinite;
+}
+
+
+/* =========================
+   SCROLLBAR
+   ========================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e6f0ec;
+}
+
+::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(
+      180deg,
+      #73a996,
+      #43816d
+    );
+
+  border-radius: 10px;
+
+  border: 2px solid #e6f0ec;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #43816d,
+      #286250
+    );
+}
+
+
+/* =========================
+   TEXT SELECTION
+   ========================= */
+
+::selection {
+  background: rgba(54, 162, 105, 0.2);
+
+  color: var(--primary);
+}
+
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+@keyframes orbFloat {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-15px, 18px);
+  }
+}
+
+
+@keyframes orbGlow {
+  from {
+    opacity: 0.55;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes livePulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(57, 184, 115, 0.55);
+  }
+
+  70% {
+    box-shadow:
+      0 0 0 8px rgba(57, 184, 115, 0);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(57, 184, 115, 0);
+  }
+}
+
+
+@keyframes shimmerMove {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 150%;
+  }
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        rgba(79, 157, 120, 0.12),
+        transparent 35%
+      ),
+      #eef6f3;
+  }
+
+  .climate-hero {
+    border-radius: 18px;
+  }
+
+  .climate-card {
+    border-radius: 14px;
+  }
+}
+
+
+/* =========================
+   ACCESSIBILITY
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
 }

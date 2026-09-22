@@ -1,0 +1,8 @@
+feature,mean_absolute_shap
+population_density,0.7760695056968502
+ndvi,0.5547476405527291
+building_density,0.1541887737389884
+water_coverage,0.14949224035968223
+road_density,0.05542482767999449
+road_count,0.0471143892936862
+building_count,0.03002104079082115
