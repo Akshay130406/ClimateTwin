@@ -93,11 +93,8 @@ def calculate_priority_score(gdf):
 
     heat = normalize(data["hotseason_lst"])
     population = normalize(data["population_density"])
-
     vegetation_stress = 1 - normalize(data["ndvi"])
-
     building = normalize(data["building_density"])
-
     water_stress = 1 - normalize(data["water_coverage"])
 
     data["priority_score"] = (
@@ -169,9 +166,12 @@ Actual ClimateTwin priority data:
 {json.dumps(cells_json, indent=2)}
 
 Rules:
-- Answer only using the provided ClimateTwin data.
+- Answer the user's question directly.
+- Use the provided ClimateTwin data whenever the question requires data.
+- Do not answer every question with the same heat-mitigation response.
+- If the user asks about a specific concept, explain that concept.
+- If the user asks about cells, use the actual cell_id values.
 - Never invent Pune neighborhood names, locations, or statistics.
-- Refer to locations using their actual cell_id.
 - MODIS LST means Land Surface Temperature, not air temperature.
 - Do not claim causal relationships.
 - Provide practical decision-support information.
@@ -179,7 +179,6 @@ Rules:
 - Maximum 5-7 short lines.
 - Mention only the top 3 relevant cells when cell-level data is needed.
 - Do not provide long explanations.
-- Do not repeat information.
 - Do not use tables.
 - Use short bullet points when listing cells.
 - Start directly with the answer.
@@ -261,10 +260,9 @@ def ask_climate_assistant(question):
             top_cells
         )
 
-    except Exception:
-        return generate_local_fallback(
-            question,
-            top_cells
+    except Exception as error:
+        raise RuntimeError(
+            f"Gemini error: {error}"
         )
 
 
