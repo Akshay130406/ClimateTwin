@@ -1,11 +1,21 @@
+
 from pathlib import Path
 import os
 import json
+import logging
+
 import geopandas as gpd
 import pandas as pd
 import joblib
 from dotenv import load_dotenv
 from google import genai
+
+
+# ---------------------------------------------------------
+# LOGGING
+# ---------------------------------------------------------
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------
@@ -247,13 +257,22 @@ def ask_climate_assistant(question):
     if not question or not question.strip():
         return "Please enter a question."
 
-    gdf = load_dataset()
+    # Load dataset and calculate scores
+    try:
+        gdf = load_dataset()
 
-    top_cells = get_top_priority_cells(
-        gdf,
-        limit=10
-    )
+        top_cells = get_top_priority_cells(
+            gdf,
+            limit=10
+        )
 
+    except Exception:
+        logger.exception(
+            "Failed to load ClimateTwin dataset or calculate priority scores."
+        )
+        raise
+
+    # Try Gemini, otherwise use local fallback
     try:
         return generate_with_gemini(
             question,
@@ -261,8 +280,28 @@ def ask_climate_assistant(question):
         )
 
     except Exception as error:
-        raise RuntimeError(
-            f"Gemini error: {error}"
+        error_message = str(error)
+
+        # Redact API key from logs
+        if GEMINI_API_KEY:
+            error_message = error_message.replace(
+                GEMINI_API_KEY,
+                "[REDACTED]"
+            )
+
+        logger.error(
+            "Gemini generation failed (%s): %s",
+            type(error).__name__,
+            error_message
+        )
+
+        logger.info(
+            "Using local ClimateTwin fallback response."
+        )
+
+        return generate_local_fallback(
+            question,
+            top_cells
         )
 
 
