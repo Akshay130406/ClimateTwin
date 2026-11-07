@@ -9,6 +9,7 @@ import pandas as pd
 import joblib
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 
 # ---------------------------------------------------------
@@ -159,7 +160,8 @@ def generate_with_gemini(question, top_cells):
         )
 
     client = genai.Client(
-        api_key=GEMINI_API_KEY
+        api_key=GEMINI_API_KEY,
+        http_options=types.HttpOptions(timeout=30_000),
     )
 
     cells_json = top_cells.to_dict(
@@ -214,6 +216,8 @@ Rules:
 
         except Exception as error:
             last_error = error
+            if isinstance(error, TimeoutError) or "timeout" in type(error).__name__.lower():
+                break
             continue
 
     raise RuntimeError(

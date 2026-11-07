@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -5,6 +7,7 @@ from ai_agent.climate_assistant import ask_climate_assistant
 
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 class AssistantRequest(BaseModel):
@@ -30,8 +33,9 @@ def climate_ai_assistant(request: AssistantRequest):
             "answer": answer
         }
 
-    except Exception as error:
+    except Exception:
+        logger.exception("AI assistant request failed")
         raise HTTPException(
             status_code=503,
-            detail=str(error)
+            detail="AI assistant is temporarily unavailable."
         )
