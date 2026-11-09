@@ -152,7 +152,50 @@ def get_top_priority_cells(gdf, limit=10):
 # GEMINI RESPONSE
 # ---------------------------------------------------------
 
-def generate_with_gemini(question, top_cells):
+SYSTEM_INSTRUCTION = """
+You are ClimateTwin AI, a helpful general-purpose assistant. Answer questions
+across topics clearly, accurately, and at an appropriate level of detail. Do
+not force unrelated questions into a climate or ClimateTwin framing.
+
+For questions about climate, the environment, or urban planning, draw on your
+expertise in urban climate adaptation and climate-risk decision support. Use
+provided ClimateTwin data when a question requires local project data. Do not
+invent Pune neighborhood names, locations, statistics, or cell identifiers.
+MODIS LST means Land Surface Temperature, not air temperature; do not infer
+causation from the data. Answer the specific question rather than defaulting to
+heat mitigation. Keep climate-data answers concise and decision-focused. When
+listing cells, use actual cell_id values and mention at most the three most
+relevant cells. Start directly with the answer.
+""".strip()
+
+
+def build_chat_history(history):
+    messages = []
+
+    for item in history or []:
+        if not isinstance(item, dict):
+            raise ValueError("Chat history entries must be objects.")
+
+        role = item.get("role")
+        content = item.get("content")
+        if role == "assistant":
+            role = "model"
+
+        if role not in {"user", "model"} or not isinstance(content, str):
+            raise ValueError("Chat history entries require a user or assistant role and text content.")
+
+        if content.strip():
+            messages.append(
+                types.Content(
+                    role=role,
+                    parts=[types.Part(text=content)],
+                )
+            )
+
+    return messages
+
+
+def generate_with_gemini(question, top_cells, history=None):
 
     if not GEMINI_API_KEY:
         raise ValueError(
@@ -168,61 +211,26 @@ def generate_with_gemini(question, top_cells):
         orient="records"
     )
 
-    prompt = f"""
-You are ClimateTwin AI, an urban climate decision-support assistant.
-
-User question:
-{question}
-
-Actual ClimateTwin priority data:
-{json.dumps(cells_json, indent=2)}
-
-Rules:
-- Answer the user's question directly.
-- Use the provided ClimateTwin data whenever the question requires data.
-- Do not answer every question with the same heat-mitigation response.
-- If the user asks about a specific concept, explain that concept.
-- If the user asks about cells, use the actual cell_id values.
-- Never invent Pune neighborhood names, locations, or statistics.
-- MODIS LST means Land Surface Temperature, not air temperature.
-- Do not claim causal relationships.
-- Provide practical decision-support information.
-- Keep the response concise and decision-focused.
-- Maximum 5-7 short lines.
-- Mention only the top 3 relevant cells when cell-level data is needed.
-- Do not provide long explanations.
-- Do not use tables.
-- Use short bullet points when listing cells.
-- Start directly with the answer.
-"""
-
-    models = [
-        "gemini-3.8-flash",
-        "gemini-3.7-flash",
-        "gemini-3.6-flash",
-    ]
-
-    last_error = None
-
-    for model_name in models:
-        try:
-            response = client.models.generate_content(
-                model=model_name,
-                contents=prompt,
-            )
-
-            if response and response.text:
-                return response.text.strip()
-
-        except Exception as error:
-            last_error = error
-            if isinstance(error, TimeoutError) or "timeout" in type(error).__name__.lower():
-                break
-            continue
-
-    raise RuntimeError(
-        f"Gemini unavailable: {last_error}"
+    chat = client.chats.create(
+        model="gemini-3.8-flash",
+        history=build_chat_history(history),
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_INSTRUCTION,
+            temperature=0.3,
+        ),
     )
+
+    context = (
+        "ClimateTwin priority data (JSON):\n"
+        f"{json.dumps(cells_json, indent=2)}\n\n"
+        f"User question:\n{question}"
+    )
+    response = chat.send_message(context)
+
+    if response and response.text:
+        return response.text.strip()
+
+    raise RuntimeError("Gemini returned an empty response.")
 
 
 # ---------------------------------------------------------
@@ -256,7 +264,7 @@ def generate_local_fallback(question, top_cells):
 # MAIN AI ASSISTANT
 # ---------------------------------------------------------
 
-def ask_climate_assistant(question):
+def ask_climate_assistant(question, history=None):
 
     if not question or not question.strip():
         return "Please enter a question."
@@ -280,7 +288,8 @@ def ask_climate_assistant(question):
     try:
         return generate_with_gemini(
             question,
-            top_cells
+            top_cells,
+            history=history,
         )
 
     except Exception as error:

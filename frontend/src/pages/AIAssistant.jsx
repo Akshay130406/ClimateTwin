@@ -38,18 +38,18 @@ const capabilities = [
 
 function AIAssistant() {
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const askAI = async () => {
-    if (!question.trim() || loading) {
+    const currentMessage = question.trim();
+    if (!currentMessage || loading) {
       return;
     }
 
     setLoading(true);
     setError("");
-    setAnswer("");
 
     try {
       const response = await fetch(`${API_URL}/ai-assistant`, {
@@ -58,17 +58,27 @@ function AIAssistant() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          question: question,
+          message: currentMessage,
+          history: messages.map(({ role, content }) => ({ role, content })),
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(data.detail || "Failed to get AI response.");
       }
 
-      setAnswer(data.answer);
+      if (typeof data.answer !== "string" || !data.answer.trim()) {
+        throw new Error("The AI service returned an empty response.");
+      }
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        { role: "user", content: currentMessage },
+        { role: "assistant", content: data.answer.trim() },
+      ]);
+      setQuestion("");
     } catch (err) {
       console.error("AI Assistant Error:", err);
       setError("Unable to connect to the ClimateTwin AI service.");
@@ -415,6 +425,7 @@ function AIAssistant() {
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 onKeyDown={handleKeyDown}
+                disabled={loading}
                 placeholder="Ask about heat risk, priority zones, interventions, future impact..."
                 rows={6}
                 style={{
@@ -535,6 +546,7 @@ function AIAssistant() {
                 {exampleQuestions.map((example) => (
                   <button
                     key={example}
+                    disabled={loading}
                     onClick={() => {
                       setQuestion(example);
                       setError("");
@@ -665,18 +677,45 @@ function AIAssistant() {
 
             {/* ANSWER */}
 
-            {answer && !loading && (
-              <div
-                className="section-reveal"
-                style={{
-                  marginTop: "24px",
-                  overflow: "hidden",
-                  borderRadius: "18px",
-                  border: "1px solid var(--border)",
-                  background: "#fff",
-                  boxShadow: "0 12px 32px rgba(18,60,53,0.07)",
-                }}
-              >
+            {messages.map((message, index) => (
+              message.role === "user" ? (
+                <div
+                  key={`user-${index}`}
+                  className="section-reveal"
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "20px",
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: "85%",
+                      padding: "13px 16px",
+                      borderRadius: "15px 15px 3px 15px",
+                      background: "#e9f3ee",
+                      color: "var(--text)",
+                      fontSize: "13px",
+                      lineHeight: 1.65,
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  key={`assistant-${index}`}
+                  className="section-reveal"
+                  style={{
+                    marginTop: "20px",
+                    overflow: "hidden",
+                    borderRadius: "18px",
+                    border: "1px solid var(--border)",
+                    background: "#fff",
+                    boxShadow: "0 12px 32px rgba(18,60,53,0.07)",
+                  }}
+                >
                 <div
                   style={{
                     position: "relative",
@@ -779,10 +818,11 @@ function AIAssistant() {
                     whiteSpace: "pre-wrap",
                   }}
                 >
-                  {answer}
+                  {message.content}
                 </div>
-              </div>
-            )}
+                </div>
+              )
+            ))}
           </div>
 
           {/* RIGHT INTELLIGENCE PANEL */}
