@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import os
 import json
@@ -238,6 +237,11 @@ def generate_with_gemini(question, top_cells, history=None):
 # ---------------------------------------------------------
 
 def generate_local_fallback(question, top_cells):
+    q_lower = question.lower()
+    
+    # If the user asks a general question, don't force heat mitigation cells
+    if not any(kw in q_lower for kw in ["climate", "heat", "temperature", "cell", "urban", "weather", "environment", "lst"]):
+        return f"I received your question: '{question}'. (Note: The Gemini API connection is currently unavailable, but I am ready to answer general questions once connected.)"
 
     rows = top_cells.to_dict(
         orient="records"
